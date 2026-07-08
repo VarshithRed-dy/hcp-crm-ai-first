@@ -47,3 +47,31 @@ hcp-crm-ai-first/
   backend/
   docker-compose.yml
   README.md
+
+  ## Phase 2 Backend Core
+
+Completed backend core setup:
+
+- FastAPI router structure
+- SQLAlchemy database models
+- Seed HCP data
+- HCP read/create APIs
+- Interaction create/read/update/delete APIs
+- Groq client setup
+- Groq test endpoint
+
+### Backend API Endpoints
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/health` | Health check |
+| GET | `/api/hcps/` | Get all HCPs |
+| GET | `/api/hcps/{hcp_id}` | Get HCP by ID |
+| POST | `/api/hcps/` | Create HCP |
+| POST | `/api/interactions/` | Create interaction |
+| GET | `/api/interactions/` | Get all interactions |
+| GET | `/api/interactions/?hcp_id=1` | Get interactions by HCP |
+| GET | `/api/interactions/{interaction_id}` | Get interaction by ID |
+| PUT | `/api/interactions/{interaction_id}` | Update interaction |
+| DELETE | `/api/interactions/{interaction_id}` | Delete interaction |
+| POST | `/api/ai/groq-test` | Test Groq LLM connection |
