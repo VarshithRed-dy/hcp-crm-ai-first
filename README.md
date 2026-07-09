@@ -75,3 +75,18 @@ Completed backend core setup:
 | PUT | `/api/interactions/{interaction_id}` | Update interaction |
 | DELETE | `/api/interactions/{interaction_id}` | Delete interaction |
 | POST | `/api/ai/groq-test` | Test Groq LLM connection |
+
+## Phase 3 LangGraph Agent and Tools
+
+The backend now includes a LangGraph-based AI agent for controlling the HCP interaction form.
+
+### Agent Flow
+
+```text
+User message
+  -> Load selected HCP context
+  -> Use Groq gemma2-9b-it for intent extraction
+  -> Route to the correct LangGraph tool
+  -> Execute tool
+  -> Log tool execution
+  -> Return assistant response and updated form

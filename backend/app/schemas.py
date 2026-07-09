@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, ConfigDict
 
 
@@ -100,3 +100,19 @@ class GroqTestRequest(BaseModel):
 class GroqTestResponse(BaseModel):
     model: str
     response: str
+
+class AgentChatRequest(BaseModel):
+    message: str
+    selected_hcp_id: Optional[int] = None
+    current_form: Optional[Dict[str, Any]] = {}
+
+
+class AgentChatResponse(BaseModel):
+    assistant_response: str
+    tool_name: Optional[str] = None
+    intent: Optional[str] = None
+    confidence: Optional[float] = None
+    extracted_data: Optional[Dict[str, Any]] = None
+    tool_result: Optional[Dict[str, Any]] = None
+    updated_form: Dict[str, Any] = {}
+    missing_fields: List[str] = []

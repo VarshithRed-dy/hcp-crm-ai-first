@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, SessionLocal, engine
-from app.routers import ai, hcp, interactions
+from app.routers import agent, ai, hcp, interactions
 from app.seed_data import seed_hcps
 
 
@@ -42,6 +42,7 @@ app.add_middleware(
 app.include_router(hcp.router)
 app.include_router(interactions.router)
 app.include_router(ai.router)
+app.include_router(agent.router)
 
 
 @app.get("/")

@@ -1,5 +1,5 @@
 import os
-from typing import List, Dict
+from typing import Dict, List, Optional
 
 from dotenv import load_dotenv
 from groq import Groq
@@ -30,7 +30,7 @@ class GroqClientService:
             max_tokens=max_tokens
         )
 
-        return completion.choices[0].message.content
+        return completion.choices[0].message.content or ""
 
 
 def get_groq_service():
