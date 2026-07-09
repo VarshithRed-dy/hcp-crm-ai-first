@@ -28,7 +28,10 @@ function normalizeFormPayload(payload = {}) {
         hcp_name: payload.hcp_name ?? payload.hcpName ?? payload.hcp ?? "",
 
         interaction_type:
-            payload.interaction_type ?? payload.interactionType ?? payload.type ?? "",
+            payload.interaction_type ??
+            payload.interactionType ??
+            payload.type ??
+            (payload.raw_notes?.toLowerCase().includes("met") ? "Meeting" : ""),
 
         interaction_date:
             payload.interaction_date ?? payload.date ?? payload.interactionDate ?? "",
