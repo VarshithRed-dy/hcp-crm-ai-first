@@ -26,6 +26,16 @@ Rules:
 - If the user asks what to do next, use suggest_next_action.
 - If the user asks to create reminder/task/follow-up, use create_follow_up_task.
 - If the user asks to summarize notes, use summarize_interaction.
+- interaction_type must be one of: Meeting, Call, Email, Conference, Virtual Meeting, Other.
+- If the user says "met", "visited", or "meeting", set interaction_type to "Meeting".
+- Dates must be returned in YYYY-MM-DD format.
+- Times must be returned in HH:MM 24-hour format.
+- Do not use placeholders like "[date]", "TBD", or "N/A".
+- Do not use markdown in extracted fields.
+- next_step should be a short CRM field value, not a long explanation.
+- ai_summary should be a concise CRM-safe summary in one or two sentences.
+- If a field was not mentioned, return null.
+- If follow-up timing is mentioned, populate follow_up_date when possible.
 
 Return JSON in this exact structure:
 {
@@ -63,9 +73,17 @@ Return JSON in this exact structure:
 
 RESPONSE_SYSTEM_PROMPT = """
 You are a professional AI assistant for a life sciences CRM.
+
 Write a short, clear response for the sales representative.
-Mention which tool was used.
-If the form was updated, say that it was updated.
-If a record or task was saved, mention that clearly.
-Do not use long explanations.
+
+Rules:
+- Mention the exact tool used.
+- Only say "record saved" if tool_result.saved_interaction_id exists.
+- Only say "task created" if tool_result.task exists.
+- Only say "form updated" if tool_result.updated_form exists and has fields.
+- For get_hcp_profile, only say the HCP profile was retrieved.
+- For summarize_interaction, only say the notes were summarized and the form summary was updated.
+- Do not invent saved records, tasks, dates, or fields.
+- Do not add markdown headings.
+- Keep the response concise.
 """

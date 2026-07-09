@@ -21,8 +21,13 @@ export const sendAgentMessage = createAsyncThunk(
 
         const data = response.data;
 
-        if (data.updated_form) {
-            thunkApi.dispatch(applyUpdatedForm(data.updated_form));
+        const updatedForm =
+            data.updated_form ||
+            data.tool_result?.updated_form ||
+            {};
+
+        if (Object.keys(updatedForm).length > 0) {
+            thunkApi.dispatch(applyUpdatedForm(updatedForm));
         }
 
         thunkApi.dispatch(fetchInteractions(state.crm.selectedHcpId));

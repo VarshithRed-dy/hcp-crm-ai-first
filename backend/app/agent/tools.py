@@ -1,5 +1,6 @@
 import json
 from typing import Any, Dict, Optional
+import re
 
 from sqlalchemy.orm import Session
 
@@ -26,6 +27,14 @@ FORM_FIELDS = [
 ]
 
 
+def _strip_markdown(text: str) -> str:
+    text = re.sub(r"\*\*(.*?)\*\*", r"\1", text)
+    text = re.sub(r"__(.*?)__", r"\1", text)
+    text = text.replace("#", "")
+    text = text.replace("`", "")
+    return text.strip()
+
+
 def _to_text(value: Any) -> Optional[str]:
     if value is None:
         return None
@@ -36,7 +45,12 @@ def _to_text(value: Any) -> Optional[str]:
     if isinstance(value, dict):
         return json.dumps(value)
 
-    return str(value)
+    text = str(value).strip()
+
+    if text in ["", "[date]", "N/A", "TBD", "null", "None"]:
+        return None
+
+    return _strip_markdown(text)
 
 
 def _clean_fields(fields: Dict[str, Any]) -> Dict[str, Any]:
@@ -332,9 +346,11 @@ Return a short recommendation with:
         max_tokens=400
     )
 
+    short_next_step = "Send payer access details and schedule follow-up."
+
     updated_form = {
         **(current_form or {}),
-        "next_step": recommendation
+        "next_step": short_next_step
     }
 
     result = {
@@ -429,6 +445,12 @@ def summarize_interaction_tool(
         temperature=0.2,
         max_tokens=300
     )
+
+    interaction_date = current_form.get("interaction_date")
+
+    if interaction_date:
+        summary = summary.replace("[Date]", interaction_date)
+        summary = summary.replace("[date]", interaction_date)
 
     updated_form = {
         **(current_form or {}),

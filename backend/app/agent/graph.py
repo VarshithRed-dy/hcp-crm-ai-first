@@ -271,20 +271,29 @@ def response_generation_node(state: HCPAgentState) -> Dict[str, Any]:
     updated_form = state.get("updated_form") or state.get("current_form") or {}
 
     response_prompt = f"""
-User message:
-{state.get("user_message")}
+    User message:
+    {state.get("user_message")}
 
-Tool used:
-{tool_result.get("tool_name")}
+    Tool used:
+    {tool_result.get("tool_name")}
 
-Tool result:
-{json.dumps(tool_result, default=str)}
+    Tool message:
+    {tool_result.get("message")}
 
-Updated form:
-{json.dumps(updated_form, default=str)}
+    Saved interaction id:
+    {tool_result.get("saved_interaction_id")}
 
-Write a short assistant response.
-"""
+    Task:
+    {json.dumps(tool_result.get("task"), default=str)}
+
+    Updated form exists:
+    {bool(tool_result.get("updated_form"))}
+
+    Tool result:
+    {json.dumps(tool_result, default=str)}
+
+    Write the assistant response based only on the tool result.
+    """
 
     assistant_response = groq.chat_completion(
         messages=[
@@ -370,13 +379,21 @@ def run_hcp_agent(
 
     final_state = hcp_agent_graph.invoke(initial_state)
 
+    tool_result = final_state.get("tool_result") or {}
+    updated_form = (
+        final_state.get("updated_form")
+        or tool_result.get("updated_form")
+        or current_form
+        or {}
+    )
+
     return {
         "assistant_response": final_state.get("assistant_response"),
         "tool_name": final_state.get("tool_name"),
         "intent": final_state.get("intent"),
         "confidence": final_state.get("confidence"),
         "extracted_data": final_state.get("extracted_data"),
-        "tool_result": final_state.get("tool_result"),
-        "updated_form": final_state.get("updated_form") or current_form or {},
+        "tool_result": tool_result,
+        "updated_form": updated_form,
         "missing_fields": final_state.get("missing_fields", [])
     }

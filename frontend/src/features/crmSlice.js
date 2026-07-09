@@ -20,6 +20,62 @@ const emptyForm = {
     ai_summary: "",
 };
 
+function normalizeFormPayload(payload = {}) {
+    return {
+        ...payload,
+
+        hcp_id: payload.hcp_id ?? payload.hcpId ?? null,
+        hcp_name: payload.hcp_name ?? payload.hcpName ?? payload.hcp ?? "",
+
+        interaction_type:
+            payload.interaction_type ?? payload.interactionType ?? payload.type ?? "",
+
+        interaction_date:
+            payload.interaction_date ?? payload.date ?? payload.interactionDate ?? "",
+
+        interaction_time:
+            payload.interaction_time ?? payload.time ?? payload.interactionTime ?? "",
+
+        attendees:
+            payload.attendees ?? payload.attendee ?? "",
+
+        topics_discussed:
+            payload.topics_discussed ??
+            payload.topics ??
+            payload.discussion_points ??
+            "",
+
+        materials_shared:
+            payload.materials_shared ??
+            payload.materials ??
+            payload.material_shared ??
+            "",
+
+        samples_distributed:
+            payload.samples_distributed ??
+            payload.samples ??
+            "",
+
+        sentiment:
+            payload.sentiment ?? "",
+
+        outcome:
+            payload.outcome ?? "",
+
+        next_step:
+            payload.next_step ?? payload.nextStep ?? payload.follow_up_action ?? "",
+
+        follow_up_date:
+            payload.follow_up_date ?? payload.followUpDate ?? payload.follow_up ?? "",
+
+        raw_notes:
+            payload.raw_notes ?? payload.rawNotes ?? "",
+
+        ai_summary:
+            payload.ai_summary ?? payload.summary ?? payload.aiSummary ?? "",
+    };
+}
+
 export const fetchHcps = createAsyncThunk("crm/fetchHcps", async () => {
     const response = await apiClient.get("/api/hcps/");
     return response.data;
@@ -64,10 +120,16 @@ const crmSlice = createSlice({
         },
 
         applyUpdatedForm(state, action) {
+            const updatedForm = normalizeFormPayload(action.payload || {});
+
             state.formDraft = {
                 ...state.formDraft,
-                ...action.payload,
+                ...updatedForm,
             };
+
+            if (updatedForm.hcp_id) {
+                state.selectedHcpId = Number(updatedForm.hcp_id);
+            }
         },
 
         resetFormDraft(state) {

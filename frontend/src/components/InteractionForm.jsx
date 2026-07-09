@@ -89,7 +89,7 @@ const longFields = [
 function ReadOnlyInput({ value, placeholder }) {
     return (
         <input
-            value={value || ""}
+            value={value || "Not captured"}
             placeholder={placeholder}
             readOnly
             className="readonly-input"
@@ -100,7 +100,7 @@ function ReadOnlyInput({ value, placeholder }) {
 function ReadOnlyTextarea({ value, placeholder }) {
     return (
         <textarea
-            value={value || ""}
+            value={value || "Not captured"}
             placeholder={placeholder}
             readOnly
             className="readonly-textarea"
