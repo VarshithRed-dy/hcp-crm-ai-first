@@ -1,16 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
 :root {
-  font-family: 'Inter', system-ui, sans-serif;
-  background: #f6f8fb;
+  font-family: "Inter", system-ui, sans-serif;
+  background: #eef3f8;
   color: #1f2937;
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: "Inter", system-ui, sans-serif;
+  background: #eef3f8;
 }
 
 * {
   box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
 }

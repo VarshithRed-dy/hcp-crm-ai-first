@@ -90,3 +90,32 @@ User message
   -> Execute tool
   -> Log tool execution
   -> Return assistant response and updated form
+
+  ## Phase 4 Frontend
+
+The frontend now includes a complete AI-first CRM interaction logging screen.
+
+### Frontend Features
+
+- Split-screen layout
+- Left-side read-only HCP interaction form
+- Right-side AI assistant chat panel
+- Redux Toolkit state management
+- API integration with FastAPI
+- Interaction timeline from database
+- LangGraph tool execution display
+
+### Key UI Rule
+
+The interaction form is intentionally read-only. Users populate and edit the form through the AI assistant chat. The assistant sends the message to FastAPI, which invokes the LangGraph agent and returns the updated form state.
+
+### Frontend Flow
+
+```text
+User enters message in AI assistant
+  -> React dispatches Redux action
+  -> POST /api/agent/chat
+  -> LangGraph routes request to tool
+  -> Backend returns updated_form
+  -> Redux updates formDraft
+  -> Left form refreshes automatically
